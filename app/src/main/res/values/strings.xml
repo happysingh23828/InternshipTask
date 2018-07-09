@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">InternshipDemo</string>
+    <string name="extract_contacts">Extract Contacts</string>
 </resources>
