@@ -6,6 +6,8 @@ import android.database.Cursor;
 import android.os.Environment;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
+import android.support.design.widget.BaseTransientBottomBar;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -15,17 +17,21 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.Buffer;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -35,6 +41,8 @@ import dynamicdrillers.happysingh.internshipdemo.models.WorldPopulationModel;
 import dynamicdrillers.happysingh.internshipdemo.models.Worldpopulation;
 import dynamicdrillers.happysingh.internshipdemo.retrofit.ApiInterface;
 import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
@@ -45,6 +53,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final String TAG = "Main";
+    private static final int BUFFER = 2048 ;
     RecyclerView recyclerView;
     List<Worldpopulation> worldPopulationModelList;
     WorldPopulationListAdaptor worldPopulationListAdaptor;
@@ -52,9 +62,10 @@ public class MainActivity extends AppCompatActivity {
     public static final int CONTACTCODE = 102;
     private Button extractContacts;
     FileWriter writer;
-    File root ;
+    File root;
     File csvFIle;
     SpotsDialog spotsDialog;
+    LinearLayout linearLayout;
 
 
     @Override
@@ -70,21 +81,50 @@ public class MainActivity extends AppCompatActivity {
         extractContacts.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                try {
-                    spotsDialog.show();
-                    saveContactsInZipFormat();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
+                spotsDialog.show();
+                downloadZipWithRxJava();
             }
         });
     }
 
-    private void saveContactsInZipFormat() throws IOException {
+    private void downloadZipWithRxJava() {
+
+        Observable<File> callFileObservable = Observable.fromCallable(new Callable<File>() {
+            @Override
+            public File call() throws Exception {
+                return saveContactsInZipFormat();
+            }
+        });
+
+        callFileObservable.observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.newThread())
+                .subscribe(new Observer<File>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(File file) {
+
+                       Snackbar.make(linearLayout,"Zip Has Been Dowloaded ..... ",Snackbar.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
 
 
+    }
+
+    private File saveContactsInZipFormat() throws IOException {
 
         writer = new FileWriter(csvFIle);
         writer.append("Name");
@@ -104,13 +144,10 @@ public class MainActivity extends AppCompatActivity {
         writer.flush();
         writer.close();
         cursor.close();
-
+        zip(new String[]{csvFIle.getPath()},"/Contacts.zip");
         spotsDialog.dismiss();
-        Toast.makeText(this, "CSV Dowloaded", Toast.LENGTH_SHORT).show();
-
-
+        return csvFIle;
     }
-
 
     private void getInternetPermissions() {
 
@@ -179,7 +216,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onError(Throwable e) {
 
-                Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -191,6 +227,38 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    public void zip(String[] _files, String zipFileName) {
+
+        
+        try {
+            BufferedInputStream origin = null;
+            FileOutputStream dest = new FileOutputStream(Environment.getExternalStorageDirectory().getPath()+zipFileName);
+            ZipOutputStream out = new ZipOutputStream(new BufferedOutputStream(
+                    dest));
+            byte data[] = new byte[BUFFER];
+
+            for (int i = 0; i < _files.length; i++) {
+                Log.v("Compress", "Adding: " + _files[i]);
+                FileInputStream fi = new FileInputStream(_files[i]);
+                origin = new BufferedInputStream(fi, BUFFER);
+
+                ZipEntry entry = new ZipEntry(_files[i].substring(_files[i].lastIndexOf("/") + 1));
+                out.putNextEntry(entry);
+                int count;
+
+                while ((count = origin.read(data, 0, BUFFER)) != -1) {
+                    out.write(data, 0, count);
+                }
+                origin.close();
+            }
+
+            out.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
     private void init() {
 
         recyclerView = (RecyclerView) findViewById(R.id.countryList_recylerview);
@@ -200,9 +268,9 @@ public class MainActivity extends AppCompatActivity {
         spotsDialog = (SpotsDialog) new SpotsDialog.Builder().setContext(this).build();
         root = Environment.getExternalStorageDirectory();
         csvFIle = new File(root, "contacts.csv");
+        linearLayout = (LinearLayout)findViewById(R.id.linearlayoutmain);
     }
-
-
+    
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
