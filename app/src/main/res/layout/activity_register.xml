@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.RegisterActivity"
+    android:orientation="vertical"
+    android:weightSum="5"
+    >
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@color/blue"
+        android:text="REGISTER"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        android:textSize="30dp"
+        android:gravity="center"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1.5"
+        android:background="@drawable/round_design_blue">
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2.4"
+        android:orientation="vertical"
+        android:padding="10dp">
+
+        <EditText
+            android:id="@+id/edt_username"
+            android:inputType="text"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:hint="Enter Username"
+            android:textSize="15sp"
+            android:drawableLeft="@drawable/ic_username"
+            android:textColor="#666666"
+            android:layout_margin="10dp"
+            />
+
+
+        <EditText
+            android:id="@+id/edt_password"
+            android:inputType="textPassword"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:hint="Enter Password"
+            android:textSize="15sp"
+            android:drawableLeft="@drawable/ic_lock"
+            android:textColor="#666666"
+            android:layout_margin="10dp"
+            />
+
+        <Button
+            android:id="@+id/btn_register_main"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:text="Register"
+            android:layout_margin="10dp"
+            android:textColor="@color/white"
+            android:background="@drawable/button_background"/>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.4"
+                android:textColor="#123456"
+                android:text="Already Have An Account ?"
+                android:gravity="center"
+                />
+
+            <Button
+                android:id="@+id/btn_login"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.3"
+                android:layout_margin="5dp"
+                android:text="LOGIN"
+                android:textColor="@color/white"
+                android:background="@drawable/login_button_background_orange"/>
+        </LinearLayout>
+    </LinearLayout>
+
+
+
+</LinearLayout>

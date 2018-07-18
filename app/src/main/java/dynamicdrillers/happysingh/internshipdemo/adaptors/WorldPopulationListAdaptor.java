@@ -8,16 +8,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-import dynamicdrillers.happysingh.internshipdemo.ImageFullViewActivity;
+import dynamicdrillers.happysingh.internshipdemo.activities.ImageFullViewActivity;
 import dynamicdrillers.happysingh.internshipdemo.R;
-import dynamicdrillers.happysingh.internshipdemo.models.WorldPopulationModel;
 import dynamicdrillers.happysingh.internshipdemo.models.Worldpopulation;
 
 public class WorldPopulationListAdaptor extends RecyclerView.Adapter<WorldPopulationListAdaptor.WorldPopulationViewHolder> {
