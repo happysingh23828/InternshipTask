@@ -43,6 +43,7 @@ public class LoginActivityTest {
     public ActivityTestRule<LoginActivity> loginActivityActivityTestRule = new ActivityTestRule<>(LoginActivity.class);
 
 
+
     @Test
     public void all_ui_test() {
 
@@ -82,8 +83,10 @@ public class LoginActivityTest {
 //        intended(hasComponent(MainActivity.class.getName()));
 
 
-        //Clickout LOgout Button for Logout
+        //Clickout Logout Button for Logout
         onView(withId(R.id.btn_logout)).perform(click());
+
+
     }
 
 }
