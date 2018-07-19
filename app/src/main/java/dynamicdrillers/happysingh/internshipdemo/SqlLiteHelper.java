@@ -38,6 +38,9 @@ public class SqlLiteHelper extends SQLiteOpenHelper {
             + KEY_PASSWORD + " TEXT"
             + " ) ";
 
+//    public static final  String SQL_DEFAULT_USER = "INSERT INTO" + TABLE_USERS + "("
+//            +
+
 
     public SqlLiteHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -47,6 +50,13 @@ public class SqlLiteHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
 
         db.execSQL(SQL_TABLE_USERS);
+
+
+        //Default User
+        ContentValues  contentValues = new ContentValues();
+        contentValues.put(KEY_USER_NAME,"DemoUser");
+        contentValues.put(KEY_PASSWORD,"123456");
+        db.insert(TABLE_USERS,null,contentValues);
 
     }
 
