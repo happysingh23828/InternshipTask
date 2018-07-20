@@ -39,21 +39,21 @@ import static org.hamcrest.core.AllOf.allOf;
 import static org.junit.Assert.*;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 
+
+
 @RunWith(AndroidJUnit4.class)
+
 @LargeTest
 public class LoginActivityTest {
 
     @Rule
     public ActivityTestRule<LoginActivity> loginActivityActivityTestRule = new ActivityTestRule<>(LoginActivity.class);
 
-
-
     @Test
     public void all_ui_test() throws InterruptedException {
 
         // Default User Username = DemoUser
         //         User Password = 123456
-
 
         // --------------------**********************************------------------------------***************************************************//
         //LOGIN ACTIVITY
@@ -107,6 +107,7 @@ public class LoginActivityTest {
 
         //Clickout Logout Button for Logout
         onView(withId(R.id.btn_logout)).perform(click());
+
 
 
     }

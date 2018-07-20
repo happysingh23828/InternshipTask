@@ -35,7 +35,6 @@ public class AppModules {
     public static class NetworkModule {
 
         String mBaseUrl;
-
         public NetworkModule(String mBaseUrl) {
             this.mBaseUrl = mBaseUrl;
         }
@@ -75,6 +74,5 @@ public class AppModules {
                     .client(okHttpClient)
                     .build();
         }
-
     }
 }
